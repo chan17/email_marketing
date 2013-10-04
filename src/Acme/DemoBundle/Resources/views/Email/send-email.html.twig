@@ -1,0 +1,145 @@
+{% extends "AcmeDemoBundle:Email:base.html.twig" %}
+{% block title %}发送文章{% endblock %}
+
+{% block vendor %}
+<script type="text/javascript" src="/libs/jquery.validate.min.js"></script>
+{% endblock %}
+
+{% block content %}
+{% set onePost = onePost|default(null) %}
+<p>
+准备发送文章 &nbsp;&nbsp;“<i><b>{{ onePost.title }}</b></i>”&nbsp;&nbsp;：
+</p><hr>
+
+<div id="send-mail-url" data-url="{{ url('AemailAacc',{id:onePost.id}) }}" style="display:none;"></div>
+<div class="alert alert-info" style="display:none;" id="alerts">
+	<span id="sender"></span>&nbsp;
+	<strong id="headMessage">正在发送给:</strong>&nbsp;
+	<span id="addressee"></span>
+	<span id="uping" style="left:100px;position:relative;"></span>
+</div>
+
+<div class="alert alert-error" style="display:none;" id="fail">
+</div>
+
+<form name="emailPost" id="emailPost" method="post" class="form-horizontal" >
+	<div class="control-group row-fluid">
+		<label class="control-label span1">收件人：</label>
+		<div class="span11">
+			<textarea rows="10" name="setTo" id="setTo" class="input-block-level"></textarea>
+		</div>
+	</div>
+
+	<div class="control-group row-fluid">
+		<label class="control-label span1"></label>
+		<div class="span11">
+			<button type="button" id="send" name="send" />发送</button>
+			<span style="left:60px; position:relative;">
+				<button type="button" id="clean" name="clean" />清空</button>
+			</span>
+		</div>
+	</div>
+</form>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+	$("#emailPost").validate({
+		rules:{
+			setTo:{
+				required: true
+			}
+		},
+		messages: {
+			setTo:{
+				required:'不行哒，不行哒，框框里空空的呢~'
+			}
+		},
+		// submitHandler: function(form) {
+		// 	form.submit();
+		// }
+	});
+	var smtp_account = new Array();
+	var smtp_id = new Array();
+
+	$("#send").click(function(){
+		//所有收件人 sender
+	    var str,email;
+	    var str = $("#setTo").val();
+	    var reg=/([a-z0-9_\.\-])+\@(([a-z0-9\-])+\.)+([a-z0-9]{2,4})+/ig;
+	    var email = str.match(reg);   // 尝试去匹配搜索字符串。
+
+	    $.get('{{path('GetAccount')}}',function(response){
+				var c = 0;
+			$.each(response,function(i){
+				account = response[i];
+				//只有locked在开启状态，数据库里它是0..然后才能拿出来。。
+				if (account.locked == 0) {
+					smtp_account[c] = account.smtp_account;
+					smtp_id[c] = account.id;
+					c++
+				};
+			});
+					// console.log(smtp_id);
+			if (email == null) {
+				$("#headMessage").text("你还没有输入正确的邮箱。");
+			}else{
+					// console.log('处理',smtp_id);
+				sendMail();
+			};//if end
+	    });
+
+    var sendMail = function() {
+	    var k = 0;
+	    var succ = 0;
+	    $.each(email, function(key,value){
+	   	    $(document).queue('upload',function(){
+				var url = $('#send-mail-url').data('url') + '?&senderid='+ smtp_id[k] + '&addressee='+value;
+				// console.log('senderid=',smtp_id[k]);
+				//计数器
+				k ++;
+				if (k > smtp_id.length-1) {
+					k = 0;
+				}
+				//发送各种状态。
+	   			$("#alerts").show();
+					succ ++;
+				$("#sender").text(smtp_account[k]);
+	   			$("#headMessage").text("正在发送给:");
+	   			$("#addressee").text(value);
+				$("#uping").text('(已发送'+succ+' 封 / 共 '+email.length+'封)');
+	   			//post 上传文章
+		   		$.post(url,function(response){		   			
+		   			$("#fail").show();
+		   			console.log(response.status);
+		   		if (response.status == 'fail') {
+		   			$("#fail").html(smtp_account[k]+"  发送给   "+value+"   的时候 出错啦！"+"</br>这个是错误的原因呢:   "+response.message);
+		   			$("#alerts").hide();
+		   		};
+		   		if (response.status == 'ok') {
+		   			$("#fail").hide();
+		   		};
+
+		   		})
+		   		.complete(function() {
+					if (succ == email.length) {
+						$("#sender,#uping,#addressee").empty();
+						$("#headMessage").text("真棒！邮件发光光了。");
+						succ = 0;
+					};	
+			   		$(document).dequeue('upload');
+		   		});
+		    });
+	    });
+	    $(document).dequeue('upload');
+    };// send mail function end
+
+	});//$("#send").click   ~~ end  ~~
+	
+	$("#clean").click(function(){
+		$("#setTo").val("");
+		$("#alerts,#fail").hide();
+	});
+});
+</script>
+{% endblock %}

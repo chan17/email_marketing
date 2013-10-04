@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %} - 邮件营销</title>
+    {% block jquery %}{% endblock %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="/libs/bootstrap/2.3.1/css/bootstrap.css" rel="stylesheet" media="screen"/>
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+
+      @media (max-width: 980px) {
+        /* Enable use of floated navbar text */
+        .navbar-text.pull-right {
+          float: none;
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+      }
+    </style>
+    <link href="/libs/bootstrap/2.3.1/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <script src="/libs/jquery/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="/libs/bootstrap/2.3.1/js/bootstrap.min.js"></script>
+    {% block vendor %}{% endblock %}
+    <!-- Le styles -->
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+  </head>
+
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          </button>
+          <a class="brand" href="#">邮件营销 - 一条龙服务</a>
+            <div class="nav-collapse collapse pull-right">
+              <ul class="nav">
+                {% if app.user %}
+                  <li><a href="{# path('my') #}">hi, {{ app.user.username }} </a></li>
+                  <li><a href="{{ url('logout') }}">退出</a></li>
+                {% else %}
+                  <li><a href="{{ url('login') }}">登录</a></li>
+                  <li><a href="{{ url('register') }}">注册</a></li>
+                {% endif %}
+              </ul>
+            </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+<div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">邮箱地址管理</li>
+              <li id="li1"><a href="{{ url('index') }}">首页</a></li>
+              <li id="li2"><a href="{{ url('dig') }}">收件人地址提取</a></li>
+              <li id="li3"><a href="{{ url('account') }}">发送人账户管理</a></li>
+              <li class="nav-header">邮件发送</li>
+              <!-- <li id="li4"><a href="{{ url('addPost') }}">编辑文章</a></li> -->
+              <li id="li5"><a href="{{ url('Post') }}">管理文章</a></li>
+            </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span10" >
+        <!--   <div class="hero-unit" style="height:25px;">
+            {% block tips %}{% endblock %}
+          </div> -->
+           {% block content %}{% endblock %}
+
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p>&copy; Chan17 2013</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+  </body>
+</html>

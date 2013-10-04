@@ -1,0 +1,52 @@
+services:
+    Acme.user_provider: 
+        class: Acme\Service\User\UserProvider
+        arguments:    [@service_container]
+
+jms_security_extra:
+    secure_all_services: false
+    expressions: true
+
+security:
+    encoders:
+        acme\Service\User\CurrentUser: sha256
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    providers:
+        custom_provider:
+            id: Acme.user_provider
+
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+             pattern:    /.*
+             form_login:
+                 login_path: /login
+                 check_path: /login_check
+                 always_use_default_target_path: true
+                 default_target_path: /index
+                 use_referer: false
+                 #success_handler: authentication_handler
+
+             logout:
+                 path:   /logout
+                 target: /index
+             remember_me:
+                 key: "%secret%"
+                 name: _rbme
+                 lifetime: 8640000
+                 path: /
+                 remember_me_parameter: _remember_me
+             anonymous:  true
+        login:
+            pattern:  ^/demo/secured/login$
+            security: false
+
+    access_control: 
+        - { path: ^/account, roles: ROLE_USER }
+        - { path: ^/post, role: ROLE_USER }

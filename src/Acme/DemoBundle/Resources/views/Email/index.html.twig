@@ -1,0 +1,18 @@
+{% extends "AcmeDemoBundle:Email:base.html.twig" %}
+{% block title %}首页{% endblock %}
+
+{% block vendor %}
+{% endblock %}
+
+{% block content %}
+<h3>您好,发邮件什么的最棒了。。。</h3>
+<hr>
+<img src="{{ asset('bundles/acmedemo/images/email.jpg') }}"  alt="women" width="32%" height="40px"/>
+<img src="{{ asset('bundles/acmedemo/images/6621-110q513024412.jpg') }}"  alt="women" width="64%" height="40px"/>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#li1").attr("class","active");
+});
+</script>
+{% endblock %}

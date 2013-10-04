@@ -1,0 +1,85 @@
+index:
+    pattern:  /index
+    defaults: { _controller: AcmeDemoBundle:Index:index }
+
+# Dig 收件人地址提取  -------------------------------------------
+dig:
+    pattern:  /dig
+    defaults: { _controller: AcmeDemoBundle:Dig:export }
+
+# EMAIL ACCOUNT 发送人账户管理  ----------------------------------
+account:
+    pattern:  /account
+    defaults: { _controller: AcmeDemoBundle:EmailAccount:index }
+
+UpdateAccount:
+    pattern:  /account/update
+    defaults: { _controller: AcmeDemoBundle:EmailAccount:UpdateAccount }
+
+DeleteAccount:
+    pattern:  /account/delete
+    defaults: { _controller: AcmeDemoBundle:EmailAccount:DeleteAccount }
+
+SetForm:
+    pattern:  /account/setform
+    defaults: { _controller: AcmeDemoBundle:EmailAccount:SetForm }
+
+GetAccount:
+    pattern:  /account/getaccount
+    defaults: { _controller: AcmeDemoBundle:EmailAccount:GetAccount }
+
+setLocked:
+    pattern:  /account/setlocked
+    defaults: { _controller: AcmeDemoBundle:EmailAccount:setLocked }
+
+# email post edith 邮件发送 -  编辑文章  -------------------------
+
+addPost:
+    pattern:  /edit/addpost
+    defaults: { _controller: AcmeDemoBundle:EmailEdith:addPost }
+
+Post:
+    pattern:  /post
+    defaults: { _controller: AcmeDemoBundle:EmailEdith:postIndex }
+
+
+DeletePost:
+    pattern:  /post/{id}/delete
+    defaults: { _controller: AcmeDemoBundle:EmailEdith:deletePost }
+
+edit_post:
+    pattern:  /post/{id}/edit
+    defaults: { _controller: AcmeDemoBundle:EmailEdith:edit }
+
+preview_post:
+    pattern:  /post/{id}/preview
+    defaults: { _controller: AcmeDemoBundle:EmailEdith:previewPost }
+
+#send 发送邮件  -----------------------------------
+send_post:
+    pattern:  /post/{id}/send
+    defaults: { _controller: AcmeDemoBundle:SendEmail:index }
+
+AemailAacc:
+    pattern:  /post/{id}/email
+    defaults: { _controller: AcmeDemoBundle:SendEmail:sendEmail }
+
+#user 关于用户(前台) --------------------------------
+register:
+    pattern:  /register/
+    defaults: { _controller: AcmeDemoBundle:Register:index }
+
+register_check_username:
+    pattern:  /register/checkUsername/
+    defaults: { _controller: AcmeDemoBundle:Register:checkUsername }
+
+login:
+    pattern:  /login
+    defaults: { _controller:AcmeDemoBundle:Login:index }
+
+login_check:
+    pattern:   /login_check
+
+logout:
+    pattern:  /logout
+

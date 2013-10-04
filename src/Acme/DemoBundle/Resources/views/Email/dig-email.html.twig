@@ -1,0 +1,69 @@
+{% extends 'AcmeDemoBundle:Email:base.html.twig' %}
+{% block title %}收件人地址提取{% endblock %}
+
+{% block vendor %}
+<link rel="stylesheet" href="{{ asset('bundles/acmedemo/css/DigEmail.css') }}" />
+<!-- <link rel="stylesheet" href="../bundles/acmedemo/css/DigEmail.css" /> -->
+{% endblock %}
+
+{% block tips %}
+快快把带有email地址的文章复制进输入框内，程序会自动把email地址找出来呦~
+{% endblock %}
+
+{% block content %}
+<h4>快快把带有email地址的文章复制进输入框内，程序会自动把email地址找出来呦~</h4>
+<hr>
+<div id="notice" style="display:none;"><b>notice:&nbsp;&nbsp;&nbsp;</b><span id="notice_word"></span></div>
+
+<div id="main">
+	<form action="{{ url('dig') }}" id="formUp">
+		<div id="left-form" >
+			<textarea id="text" name="text" cols="70" rows="25"></textarea>
+			<br>
+		    <input type="button" class="button" id="dig" value="开始 提取"/>
+		    <input type="button" class="button" id="clean" value="清空" style="left:140px;"/>
+		</div>
+	</form>
+	<div id="mail">
+		提取后的email：</br>
+		<textarea id="export_mail" style="border:1px solid #ddd; width:380px;height:100px;"></textarea>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#dig").click(function(){
+		var form = $("#formUp");
+		$.post(form.attr('action'), form.serialize(), function(response){
+			if (response.status == 'ok') {
+				var emails = response.emails;
+				var html = '';
+				$.each(emails, function(index){
+					html += emails[index] + ";\n";
+				});
+				$("#export_mail").html(html);
+				$("#mail").show();
+			} else {
+				$("#notice_word").html(response.error.message);
+				$("#notice").show();
+			}
+		},'json');
+		$("#notice").hide();
+		return false;
+	});
+
+	$("#clean").click(function(){
+		$("#text").val("");
+		$("#mail,#notice").hide();
+	});
+
+	$("#copy").click(function(){
+		var msg=document.getElementById("text").value;
+	    window.clipboardData.setData("Text",msg);
+	});
+
+	$("#li2").attr("class","active");
+});
+</script>
+
+{% endblock %}

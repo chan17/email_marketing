@@ -1,0 +1,49 @@
+{% extends "AcmeDemoBundle:Email:base.html.twig" %}
+
+{% set script_controller = 'user/register' %}
+
+{% block title %} 这是注册页面 {{ parent() }}{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="ui-box page-box">
+    <div class="ui-box-head">
+      <div class="ui-box-head-border">
+        <h3 class="ui-box-head-title">欢迎你注册 邮件营销一条龙服务</h3>
+        <hr>
+      </div>
+    </div>
+    <div class="ui-box-container">
+      <div class="ui-box-content fn-clear">
+        <div class="ui-box-content-main">
+          <form class="ui-form" method="post" novalidate id="register-form">
+            {{ form_errors(form) }}
+            <div class="ui-form-item">
+              <label class="ui-label" for="register_username"><span class="ui-form-required">*</span>用户名</label>
+              {{ form_widget(form.username, {attr:{class:'ui-input', 'data-check-url': url('register_check_username')}}) }}
+              <p class="ui-form-explain" style="">完成注册后，用户名为您的登录账户</p>
+            </div>
+
+            <div class="ui-form-item"> 
+              <label class="ui-label" for="register_password"><span class="ui-form-required">*</span>密码</label>
+              {{ form_widget(form.password, {attr:{class:'ui-input'}}) }}
+            </div>
+
+            <div class="ui-form-item">
+              {{ form_rest(form) }}
+              <input type="submit" class="ui-button ui-button-morange" value="立刻注册">
+            </div>
+          </form>
+        </div>
+        <div class="ui-box-content-side">
+          <p class="mbm">已经有帐号？</p>
+          <p><a href="{# path('login') #}" class="ui-button ui-button-swhite">立即登录</a></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

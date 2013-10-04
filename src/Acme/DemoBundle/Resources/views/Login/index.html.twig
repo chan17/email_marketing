@@ -1,0 +1,66 @@
+{% extends "AcmeDemoBundle:Email:base.html.twig" %}
+
+{% block title %} 登录{{ parent() }}{% endblock %}
+
+{# set script_controller = 'user/login' #}
+
+{% block content %}
+
+<div class="container">
+  <div class="ui-box page-box">
+    <div class="ui-box-head">
+      <div class="ui-box-head-border">
+        <h3 class="ui-box-head-title">登录一条龙服务</h3>
+      <hr>
+      </div>
+    </div>
+    <div class="ui-box-container">
+      <div class="ui-box-content fn-clear">
+        <div class="ui-box-content-main">
+
+          <form action="{{ path('login_check') }}" method="post" class="ui-form form-horizontal" data-widget="arale.validator" novalidate>
+            {% if error %}
+              <div class="ui-form-item">
+                <div class="ui-tiptext-container ui-tiptext-container-error">
+                  <p class="ui-tiptext ui-tiptext-error">{{ error.message | trans }}</p>
+                </div>
+              </div>
+            {% endif %}
+
+              <div class="control-group">
+                <label class="control-label">帐号</label>
+                <div class="controls">
+                   <input class="ui-input" type="text" id="username" name="_username" value="{{ last_username }}" required />
+                </div>
+              </div>
+
+            <div class="control-group">
+              <label class="control-label">密码</label>
+                <div class="controls">
+                    <input class="ui-input" type="password" id="password" name="_password" required />
+                </div>
+            </div>
+
+            <div class="control-group row">
+              <div class="span2 offset1">
+                <label class="control-label" for="remember_me">记住我</label>
+                <input type="checkbox" id="remember_me" name="_remember_me" checked />
+              </div>
+                <div class="span2">
+                   <input type="submit" class="ui-button ui-button-morange" value="登录">
+                   <a href="{# path('account_password_reset') #}" class="ui-form-explain mlm">忘记密码？</a>
+                </div>
+            </div>
+          </form>
+
+        </div>
+        <div class="ui-box-content-side offset1">
+          <p class="mbm">还没有一条龙服务的帐号？</p>
+          <p><a href="{{ url('register') }}" class="ui-button ui-button-swhite">免费注册 &raquo;</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

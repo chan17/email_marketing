@@ -1,0 +1,207 @@
+{% extends "AcmeDemoBundle:Email:base.html.twig" %}
+{% block title %}发送人账户管理{% endblock %}
+
+{% block vendor %}
+
+<link href="{{ asset('bundles/acmedemo/css/EmailAccount.css') }}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../libs/jquery.validate.min.js"></script>
+{% endblock %}
+
+{% block tips %}
+在这里，你可以管理你在本系统中的邮箱，增加、修改、删除。
+{% endblock %}
+
+{% block content %}
+<h4>在这里，你可以管理你在本系统中的邮箱，增加、修改、删除。</h4>
+<hr>
+	<a href="#EmailAccount" role="button" class="btn add-btn" data-toggle="modal">添加一个新账户</a>
+
+	<!-- Modal -->
+	<div id="EmailAccount" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="EmailAccountLabel" aria-hidden="true">
+		<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="EmailAccountLabel">添加一个邮箱账号</h3>
+		</div>
+		<div class="modal-body">
+			<form id="email-form" method="post">
+			    <input name="id" id="id" type="hidden" value="0" />
+				smtp邮箱账号：
+			    <input name="smtp_account" type="text" id="smtp_account" size="50" class="box"/>
+			    <br/>
+			    smtp邮箱密码：
+			    <input name="smtp_password" type="text" id="smtp_password" size="50" class="box"/>
+			    <br/>
+			    smtp服务地址：
+			    <input name="smtp_service" type="text" id="smtp_service" size="50" class="box"/>
+			    <br/>
+				smtp端口号：&nbsp;&nbsp;&nbsp;
+				<input name="port" type="text" id="port" size="50" class="box" placeholder="通常是 25"/>
+				<br/>
+		    	<!-- 发送人邮箱： -->
+			    <input name="from_address" type="hidden" id="from_address" size="50" class="box"/>
+
+			    发送人姓名：&nbsp;&nbsp;&nbsp;
+			    <input name="from_name" type="text" id="from_name" size="50" class="box"/>
+			    <br/>
+			</from>
+		</div>
+		<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+		<button name="save" type="submit" id="save" class="btn btn-primary">保存</button>
+		</div>
+	</div>
+
+	<div id="show_account">
+		<table id="allAccount" class="table table-hover table-condensed" />
+		<thead>
+		  <tr>
+		    <td width="5%"><b>#id</b></td>
+		    <td width="20%"><b>邮箱账号</b></td>
+		    <td width="10%"><b>邮箱密码</b></td>
+		    <td width="17%"><b>smtp服务地址</b></td>
+		    <td width="8%"><b>smtp端口</b></td>
+		    <td width="18%"><b>发送人姓名</b></td>
+		    <td width="20%"><b>操作</b></td>
+		  </tr>
+		</thead>
+		</table>
+	</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#email-form").validate({
+		rules:{
+			smtp_account:{
+				required: true,
+				email: true
+			},
+			smtp_password : {
+				required: true
+			},
+			smtp_service : {
+				required: true
+			},
+			port : {
+				required : true,
+				digits : true
+			},
+			from_name : {
+				required:true,
+				rangelength:[1,20]
+			}
+		},
+		messages: {
+			smtp_account : {
+				required:'必填',
+				email:'必须是邮箱'
+			},
+			smtp_password : {
+				required:'必填'
+			},
+			smtp_service : {
+				required:'必填'
+			},
+			smtp_port : {
+				required : '必填',
+				digits : '请输入整数'
+			},
+			from_name : {
+				required:'必填',
+				rangelength:"最多输入20个字"
+			}
+		},
+
+		submitHandler: function(form) {
+			$.post('{{ path('SetForm') }}', $('#email-form').serialize(), function(){
+				// 重新加载
+				$(".acc").remove();
+				$("#allAccount").append(getAccount());
+				// alert("恭喜！账号保存成功");
+				$('#EmailAccount').modal('hide');
+				$(".box").val('');
+			});
+		}
+	});
+
+	//创建加载Account的function
+	var getAccount = function (){
+	$.get('{{ path('GetAccount') }}',function(response){
+		$.each(response,function(i){
+			var account = response[i];
+			$("#allAccount").append(
+			"<tr class='acc' ><td>"+account.id+"</td><td>"+account.smtp_account+"</td><td >******</td><td >"+account.smtp_service+"</td><td >"+account.port+"</td><td>"+account.from_name+"</td><td><div id='"+account.id+"Acc' class=\"btn-group\"><a href='javascript:void(0);' id='"+account.id+"' class=\"btn btn-small btn-danger delete-btn\">删除</a> &nbsp; <a href=\"#UpdateEmail\" id='"+account.id+"' role=\"button\" class=\"btn btn-small update-btn btn-inverse\" data-toggle=\"modal\" >修改</a></div></tr>");
+			if (account.locked == 1) {
+				$("#"+account.id+"Acc").append("<a href=\"#lockedEmail\" id='"+account.id+"' role=\"button\" class=\"btn btn-small locked-btn\" data-toggle=\"modal\" >关闭</a>");
+			}else{
+				$("#"+account.id+"Acc").append("<a href=\"#lockedEmail\" id='"+account.id+"' role=\"button\" class=\"btn btn-small btn-success locked-btn\" data-toggle=\"modal\" >开启</a>");
+			};
+		});
+	},'json');
+	};
+	//执行加载账户，加载所有account
+	getAccount();
+
+	//等待上面的那段代码加载完 #allAccount，然后执行on后面的代码。。。。
+	$("#allAccount").on('click', '.delete-btn', function(){
+		if (!confirm('确定要删除吗？')) {
+			return false;
+		}
+		$(this).parents('tr').remove();
+		var accountId = $(this).attr('id');
+		// alert(accountId);
+		$.post('{{ path('DeleteAccount') }}',{id:accountId},'json');
+	});
+
+	$("#allAccount").on('click', '.update-btn', function(){
+		var accountId = $(this).attr('id');
+		$.get('{{ path('UpdateAccount') }}',function(response){
+			$.each(response,function(i){
+				var account = response[i];
+				if (account.id == accountId) {
+					// console.log(account);
+					$("#smtp_account").val(account.smtp_account)
+					$("#smtp_password").val(account.smtp_password)
+					$("#smtp_service").val(account.smtp_service)
+					$("#port").val(account.port)
+					$("#from_address").val(account.from_address)
+					$("#from_name").val(account.from_name)
+				};
+			});
+		},'json');
+
+		$('#EmailAccount').modal('show');
+		$("#EmailAccountLabel").html("修改一个邮箱账号");
+		$("#smtp_password").attr("type","text");
+		$("#id").attr("value",accountId);
+	});
+
+	$('.add-btn').click(function(){
+		$(".box").val('');
+		$("#EmailAccountLabel").html("增加一个邮箱账号");
+		$("#smtp_password").attr("type","password");
+	});
+
+	//locked的修改。。。。
+	$("#allAccount").on('click', '.locked-btn', function(){
+		var status = $(this).html();
+		var accountId = $(this).attr('id');
+		console.log(accountId,status);
+		if (status == '开启') {
+			$(this).text('关闭');
+			$(this).removeClass('btn-success');
+			var status = 1;
+		};
+		if (status == '关闭') {
+			$(this).text('开启');
+			$(this).addClass('btn-success');
+			var status = 0;
+		};
+			console.log('.........',status);
+		$.post('{{ path('setLocked') }}',{id:accountId,locked:status},'json');
+	});
+	$
+
+
+	$("#li3").attr("class","active");
+});
+</script>
+{% endblock %}

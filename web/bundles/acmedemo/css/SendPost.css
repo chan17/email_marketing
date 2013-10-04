@@ -1,0 +1,13 @@
+@charset "utf-8";
+#top_banner {
+	font-family: "微软雅黑";
+	font-size: 18px;
+	left: 0px;
+	top: 0px;
+	background-color: #E7E7E7;
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-color: #00F;
+	position: absolute;
+	width: 100%;
+}

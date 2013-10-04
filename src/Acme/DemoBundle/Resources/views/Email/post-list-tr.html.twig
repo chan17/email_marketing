@@ -1,0 +1,17 @@
+<tr class="notes">
+	<td width="600">{{ post.title }}</td>
+	<td width="200">{{ post.addTime}}</td>
+	<td width="200">{{ post.updateTime}}</td>
+	<td width="300">
+		<div class="btn-group">
+			
+			<a href="{{ path('send_post', {'id':post.id }) }}" class="btn btn-small btn-primary update-btn">发送</a>
+
+			<button id="post.id" date-url="{{ path('preview_post',{'id':post.id }) }}" role="button" class="btn btn-small preview-btn">预览</button>
+
+			<a href="{{ path('edit_post', {'id':post.id }) }}" class="btn btn-small update-btn">编辑</a>
+
+			<a href="{{ path('DeletePost', {'id':post.id }) }}" class="btn btn-small btn-danger delete-btn">删除</a>
+		</div>
+	</td>
+</tr>

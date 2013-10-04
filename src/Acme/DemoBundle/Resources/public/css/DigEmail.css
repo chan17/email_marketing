@@ -1,0 +1,39 @@
+@charset "utf-8";
+#main {
+	position: relative;
+	width: 100%;
+	left: 0px;
+}
+.button {
+	font-family: "微软雅黑";
+	position: relative;
+	font-size: 18px;
+}
+#left-form{
+	font-family: "微软雅黑";
+	font-size: 16px;
+	float:left;
+	width: 50%;
+	display:block;
+}
+
+#mail {
+	font-family: "微软雅黑";
+	font-size: 16px;
+	left: 70px;
+	display:none;
+	float:right;
+	width: 40%;
+}
+#text {
+	width: 100%;
+	left: 0px;
+}#notice {
+	font-family: "微软雅黑";
+	font-size: 18px;
+	border: 3px solid #F00;
+	background-color: #FF3;
+	position: relative;
+	background-position: center center;
+	text-align: center;
+}

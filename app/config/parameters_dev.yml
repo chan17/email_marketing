@@ -1,0 +1,15 @@
+parameters:
+    database_driver:   pdo_mysql
+    database_host:     127.0.0.1
+    database_port:     ~
+    database_name:     email_marketing
+    database_user:     root
+    database_password: ~
+
+    # mailer_transport:  smtp
+    # mailer_host:       smtp.qq.com
+    # mailer_user:       1027942582@qq.com
+    # mailer_password:   878002de
+
+    locale:            zh-cn
+    secret:            ThisTokenIsNotSoSecretChangeIt

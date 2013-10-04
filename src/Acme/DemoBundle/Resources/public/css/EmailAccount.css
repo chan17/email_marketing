@@ -1,0 +1,17 @@
+@charset "utf-8";
+
+.button {
+	position: relative;
+	top: 0px;
+	/*background-color: #0C6;*/
+	text-align: center;
+	/*border: 2px solid #006;*/
+	font-family: "微软雅黑";
+	font-size: 19px;
+}
+#show_account {
+	position: relative;
+	top: 10px;
+	visibility: visible;
+	/*border: 2px solid #006;*/
+}

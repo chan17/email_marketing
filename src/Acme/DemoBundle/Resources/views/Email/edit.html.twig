@@ -1,0 +1,80 @@
+{% extends "AcmeDemoBundle:Email:base.html.twig" %}
+{% block title %}编辑文章{% endblock %}
+
+{% block vendor %}
+<script type="text/javascript" src="/libs/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/libs/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="/libs/ckeditor/config.js"></script>
+
+{% endblock %}
+
+{% block content %}
+{% set post = post|default(null) %}
+<p>
+{% if post == null %}写一篇文章，保存，之后在邮件管理页面里发送了它.{% else %}你正在编辑文章：<b>{{ post.title }}</b>{% endif %}
+</p><hr>
+
+<form name="emailPost" id="emailPost" method="post" class="form-horizontal"><!-- form-horizontal -->
+	<div class="control-group row-fluid" style="left:-30px; position:relative;">
+		 <label class="control-label span1">主题:</label>
+		<div class="span11">
+			<input name="title" id="title" type="text" {% if post == null %}value=""{% else %}value="{{ post.title }}"{% endif %} class="input-block-level" />
+		</div>
+	</div>
+
+	<div class="control-group row-fluid" style="left:-30px; position:relative;">
+		<label class="control-label span1">内容:</label>
+		<div class="span11">
+			<textarea rows="25" name="content" id="content" class="input-block-level">{% if post == null %}{% else %}{{post.content }}{% endif %}</textarea>
+		</div>
+	</div>
+
+	<div class="control-group row-fluid" style="left:-35px; position:relative;">
+		<label class="control-label span1"></label>
+		<div class="span11">
+			<button type="submit" id="save" name="save"/>保存</button>
+			<span style="left:60px; position:relative;">
+				<button type="button" id="clean" name="clean" />清空</button>
+			</span>
+		</div>
+	</div>
+</form>
+
+<script type="text/javascript">
+	CKEDITOR.replace( 'content',{
+		height : '500px'
+	});
+
+$(document).ready(function(){
+$("#li4").attr("class","active");
+	$("#emailPost").validate({
+		rules:{
+			title:{
+				required: true
+			},
+			content:{
+				required: true
+			}
+		},
+		messages: {
+			title:{
+				required:'一定要写标题哦~'
+			},
+			content:{
+				required:'正文空空的呢，不可以哦~'
+			}
+		},
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+	$('#clean').click(function(){
+		//我头痛，等一会在写
+		$("#content,#title").val("");
+		$("#content,#title").empty();
+		// CKEDITOR.instances.getData();
+	});
+
+});
+</script>
+{% endblock %}
